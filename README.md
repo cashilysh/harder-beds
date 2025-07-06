@@ -1,2 +1,2 @@
-# harder-beds
+# Harder Beds
 A minecraft fabric mod
