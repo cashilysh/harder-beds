@@ -1,0 +1,31 @@
+{
+    "schemaVersion": 1,
+    "id": "harderbeds",
+    "version": "1.0.0",
+    "name": "Harder Beds",
+    "description": "Makes beds harder to use and craft!",
+    "authors": [
+        "cashilysh (SaureHefePegorino)"
+    ],
+    "license": "CC-BY-NC-4.0",
+    "icon": "assets/harderbeds/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "harderbeds.Harderbeds",
+            "harderbeds.events.CancelVillageBedDrop"
+        ],
+        "modmenu": [
+            "harderbeds.client.ModMenu"
+        ]
+    },
+    "mixins": [
+        "harderbeds.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.16.10",
+        "minecraft": "~1.21.7",
+        "java": ">=21",
+        "fabric-api": ">=0.128.2+1.21.7"
+    }
+}

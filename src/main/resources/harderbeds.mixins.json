@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "harderbeds.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"BedBlockMixin",
+		"LivingEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
