@@ -14,7 +14,7 @@ public class PhantomSpawnerMixin {
     @Inject(method = "spawn", at = @At("HEAD"), cancellable = true)
     private void checkPhantomSpawning(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfo ci) {
         if (ModConfig.getSettings().isPhantomSpawningDisabled()) {
-            ci.cancel(); // Cancel the method execution and return early
+            ci.cancel();
         }
     }
 }
