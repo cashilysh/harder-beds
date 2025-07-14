@@ -48,6 +48,7 @@ public class ModConfig {
         private boolean visualizeMobPath = true;
         private boolean preventBedDropInVillages = true;
         private boolean enableVillageBedPenalty = true;
+        private boolean disablePhantomSpawning = true;
 
         public boolean shouldSimulateMobPathingOnSleep() {
             return simulateMobPathingOnSleep;
@@ -79,6 +80,14 @@ public class ModConfig {
 
         public void setEnableVillageBedPenalty(boolean enableVillageBedPenalty) {
             this.enableVillageBedPenalty = enableVillageBedPenalty;
+        }
+
+        public boolean isPhantomSpawningDisabled() {
+            return disablePhantomSpawning;
+        }
+
+        public void setPhantomSpawningDisabled(boolean disablePhantomSpawning) {
+            this.disablePhantomSpawning = disablePhantomSpawning;
         }
     }
 

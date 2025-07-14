@@ -75,6 +75,17 @@ public class ModMenu implements ModMenuApi {
                             .build()
             );
 
+            mainCategory.addEntry(
+                    entryBuilder.startBooleanToggle(
+                                    Text.literal("Disable Phantom Spawning"),
+                                    settings.isPhantomSpawningDisabled()
+                            )
+                            .setDefaultValue(defaults.isPhantomSpawningDisabled())
+                            .setTooltip(Text.literal("If enabled, no phantoms will spawn even if the player doesnt sleep."))
+                            .setSaveConsumer(settings::setPhantomSpawningDisabled)
+                            .build()
+            );
+
             return builder.build();
         };
     }
