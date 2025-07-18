@@ -7,6 +7,10 @@ Optional:
 
 mOgUt4GM
 
+1.0.1
+
+- Added toggle to disable Phantoms
+
 1.0.0
 
 - initial release
