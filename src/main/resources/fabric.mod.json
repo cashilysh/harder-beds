@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "harderbeds",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "name": "Harder Beds",
     "description": "Makes beds harder to use and craft!",
     "authors": [
