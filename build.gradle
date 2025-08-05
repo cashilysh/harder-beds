@@ -48,7 +48,22 @@ def loadVersionMappings() {
     def mappingsFile = file('version_mappings.json')
     if (!mappingsFile.exists()) {
         // Instruct the user to run the new task if the file is missing
-        throw new GradleException("Version mappings file not found. Please run the 'updateVersionMappings' task first.")
+        println "Version mappings file not found. Downloading it..."
+		
+		
+		def apiUrl = "https://linkieapi.shedaniel.me/api/versions/all"
+       
+        println "Fetching latest version mappings from ${apiUrl}..."
+        try {
+            // Connect to the URL and get the text content
+            def jsonText = new URL(apiUrl).text
+            // Save the downloaded content to the local file
+            mappingsFile.text = jsonText
+            println "Successfully saved latest mappings to ${mappingsFile.path}"
+        } catch (Exception e) {
+            throw new GradleException("Failed to download version mappings: ${e.message}")
+        }
+		
     }
     
     def slurper = new JsonSlurper()
