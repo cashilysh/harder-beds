@@ -1,4 +1,7 @@
 @echo off
+for %%A in ("%~dp0.") do set "FolderName=%%~nA"
+title %FolderName%
+
 echo Building mod for all Minecraft versions...
 ::call gradlew clean
 
