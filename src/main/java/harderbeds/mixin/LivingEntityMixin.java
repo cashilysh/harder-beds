@@ -35,11 +35,11 @@ public class LivingEntityMixin {
             }
 
             PlayerEntity player = (PlayerEntity) self;
-            World world = player.getWorld();
+            World world = player.getEntityWorld();
 
             if (world.getTimeOfDay() % 24000L < 1000L) {
 
-                if (!world.isClient && world instanceof ServerWorld) {
+                if (!world.isClient() && world instanceof ServerWorld) {
 
                     try {
                         // Get the sleeping position

@@ -44,7 +44,7 @@ public class BedSafetyChecker {
     public static boolean isBedSafe(World world, BlockPos bedPos, PlayerEntity player) {
 
 
-        if (world.isClient || !(world instanceof ServerWorld serverWorld)) {
+        if (world.isClient() || !(world instanceof ServerWorld serverWorld)) {
             return true;
         }
         if (serverWorld.getDifficulty() == net.minecraft.world.Difficulty.PEACEFUL) {
@@ -265,7 +265,7 @@ public class BedSafetyChecker {
 
     private static void spawnPathParticles(Path path, LivingEntity entityworld){
 
-        ServerWorld serverWorld = (ServerWorld) entityworld.getWorld();
+        ServerWorld serverWorld = (ServerWorld) entityworld.getEntityWorld();
 
         PathNode endNode = path.getEnd();
         BlockPos endPos = new BlockPos(

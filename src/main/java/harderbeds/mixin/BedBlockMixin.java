@@ -27,7 +27,7 @@ public class BedBlockMixin {
 
         if (ModConfig.getSettings().shouldSimulateMobPathingOnSleep()) {
 
-        if (!world.isClient && world instanceof ServerWorld) {
+        if (!world.isClient() && world instanceof ServerWorld) {
             try {
                 if (!harderbeds.util.BedSafetyChecker.isBedSafe(world, pos, player)) {
 
@@ -48,7 +48,7 @@ public class BedBlockMixin {
         if (ModConfig.getSettings().isVillageBedPenaltyEnabled()) {
 
             if ((cir.getReturnValue() == ActionResult.SUCCESS_SERVER || cir.getReturnValue() == ActionResult.SUCCESS) && player.isSleeping()) {
-                if (!world.isClient && world instanceof ServerWorld) {
+                if (!world.isClient() && world instanceof ServerWorld) {
                     try {
                         if (!harderbeds.util.BedSafetyChecker.isBedAllowed(world, pos)) {
                             player.sendMessage(Text.translatable("Prepare for a night full of weird villager dreams...."), true);

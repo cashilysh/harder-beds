@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PhantomSpawnerMixin {
 
     @Inject(method = "spawn", at = @At("HEAD"), cancellable = true)
-    private void checkPhantomSpawning(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfo ci) {
+    private void checkPhantomSpawning(ServerWorld world, boolean spawnMonsters, CallbackInfo ci) {
         if (ModConfig.getSettings().isPhantomSpawningDisabled()) {
             ci.cancel();
         }
