@@ -1,32 +1,32 @@
 package harderbeds.events;
 
-
 import harderbeds.Harderbeds;
 import harderbeds.config.ModConfig;
 import harderbeds.util.CheckBedLocation;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BedItem;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BedItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class CancelVillageBedDrop implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Change to AFTER event
-        PlayerBlockBreakEvents.AFTER.register(this::onBlockBreakAfter);
+        // Register using the After interface properly
+        PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) ->
+                onBlockBreakAfter(level, player, pos, state, blockEntity));
     }
 
-    private void onBlockBreakAfter(World world, PlayerEntity player, BlockPos pos, BlockState state, net.minecraft.block.entity.BlockEntity blockEntity) {
-
+    private void onBlockBreakAfter(Level world, Player player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if (!ModConfig.getSettings().shouldPreventBedDropInVillages()){
             return;
         }
@@ -42,7 +42,7 @@ public class CancelVillageBedDrop implements ModInitializer {
         }
 
         // Only process on server side
-        if (world.isClient() || !(world instanceof ServerWorld)) {
+        if (world.isClientSide() || !(world instanceof ServerLevel)) {
             return;
         }
 
@@ -58,22 +58,22 @@ public class CancelVillageBedDrop implements ModInitializer {
         }
     }
 
-    private void removeDropsAroundPosition(World world, BlockPos pos) {
-        if (world == null || pos == null || world.isClient()) {
+    private void removeDropsAroundPosition(Level world, BlockPos pos) {
+        if (world == null || pos == null || world.isClientSide()) {
             return;
         }
 
         try {
             // Create a box around the broken block position to search for items
-            Box searchBox = new Box(pos).expand(2.0); // 2 block radius
+            AABB searchBox = new AABB(pos).inflate(2.0); // 2 block radius
 
             // Find all item entities in the area
-            world.getEntitiesByClass(ItemEntity.class, searchBox, entity -> {
-                if (entity == null || entity.getStack() == null) {
+            world.getEntitiesOfClass(ItemEntity.class, searchBox, entity -> {
+                if (entity == null || entity.getItem() == null) {
                     return false;
                 }
                 // Check if the item is a bed item
-                return entity.getStack().getItem() instanceof BedItem;
+                return entity.getItem().getItem() instanceof BedItem;
             }).forEach(itemEntity -> {
                 // Remove the bed drop
                 itemEntity.discard();
@@ -84,5 +84,4 @@ public class CancelVillageBedDrop implements ModInitializer {
             if(Harderbeds.debug) System.err.println("Error removing drops: " + e.getMessage());
         }
     }
-
 }

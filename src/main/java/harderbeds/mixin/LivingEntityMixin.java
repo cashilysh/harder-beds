@@ -1,14 +1,14 @@
 package harderbeds.mixin;
 
 import harderbeds.config.ModConfig;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,7 +20,7 @@ public class LivingEntityMixin {
     private static int badEffectDurationMinutes = 5;
 
 
-    @Inject(method = "wakeUp", at = @At("HEAD"))
+    @Inject(method = "stopSleeping", at = @At("HEAD"))
     private void onWakeUp(CallbackInfo ci) {
 
 
@@ -30,28 +30,28 @@ public class LivingEntityMixin {
             LivingEntity self = (LivingEntity) (Object) this;
 
             // Only apply to players
-            if (!(self instanceof PlayerEntity)) {
+            if (!(self instanceof Player)) {
                 return;
             }
 
-            PlayerEntity player = (PlayerEntity) self;
-            World world = player.getEntityWorld();
+            Player player = (Player) self;
+            Level world = player.level();
 
-            if (world.getTimeOfDay() % 24000L < 1000L) {
+            if (world.getOverworldClockTime() % 24000L < 1000L) {
 
-                if (!world.isClient() && world instanceof ServerWorld) {
+                if (!world.isClientSide() && world instanceof ServerLevel) {
 
                     try {
                         // Get the sleeping position
-                        BlockPos sleepingPos = player.getSleepingPosition().orElse(null);
+                        BlockPos sleepingPos = player.getSleepingPos().orElse(null);
                         if (sleepingPos != null) {
                             if (!harderbeds.util.BedSafetyChecker.isBedAllowed(world, sleepingPos)) {
-                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, badEffectDurationMinutes * 60 * 20, 0));
-                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, badEffectDurationMinutes * 60 * 20, 0));
-                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, badEffectDurationMinutes * 60 * 20, 0));
-                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, badEffectDurationMinutes * 60 * 20, 0));
+                                player.addEffect(new MobEffectInstance(MobEffects.HUNGER, badEffectDurationMinutes * 60 * 20, 0));
+                                player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, badEffectDurationMinutes * 60 * 20, 0));
+                                player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, badEffectDurationMinutes * 60 * 20, 0));
+                                player.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, badEffectDurationMinutes * 60 * 20, 0));
 
-                                player.sendMessage(Text.translatable("That was an uncomfortable night..."), true);
+                                player.sendSystemMessage(Component.translatable("That was an uncomfortable night..."));
                             }
                         }
                     } catch (Exception e) {

@@ -1,8 +1,8 @@
 package harderbeds.mixin;
 
 import harderbeds.config.ModConfig;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.spawner.PhantomSpawner;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.levelgen.PhantomSpawner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PhantomSpawner.class)
 public class PhantomSpawnerMixin {
 
-    @Inject(method = "spawn", at = @At("HEAD"), cancellable = true)
-    private void checkPhantomSpawning(ServerWorld world, boolean spawnMonsters, CallbackInfo ci) {
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    private void checkPhantomSpawning(ServerLevel world, boolean spawnMonsters, CallbackInfo ci) {
         if (ModConfig.getSettings().isPhantomSpawningDisabled()) {
             ci.cancel();
         }

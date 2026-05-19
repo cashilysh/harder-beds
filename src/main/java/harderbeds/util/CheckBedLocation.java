@@ -1,30 +1,28 @@
 package harderbeds.util;
 
 import harderbeds.Harderbeds;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.StructureTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.Structure;
-
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.StructureTags;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 public class CheckBedLocation {
-	
-  // Keep all your existing structure checking methods unchanged
-    public static boolean isWithinVillageStructure(World world, BlockPos pos) {
-        if (world == null || pos == null || world.isClient()) return false;
+
+    public static boolean isWithinVillageStructure(Level world, BlockPos pos) {
+        if (world == null || pos == null || world.isClientSide()) return false;
 
         if(Harderbeds.debug) System.out.println("Checking if Block is in village structure......");
 
         try {
-            ServerWorld serverWorld = (ServerWorld) world;
-            if (serverWorld.getStructureAccessor() == null) return false;
+            ServerLevel serverWorld = (ServerLevel) world;
+            if (serverWorld.structureManager() == null) return false;
 
-            var structureReference = serverWorld.getStructureAccessor().getStructureContaining(pos, StructureTags.VILLAGE);
+            var structureReference = serverWorld.structureManager().getStructureWithPieceAt(pos, StructureTags.VILLAGE);
 
-            if (structureReference != null && structureReference.hasChildren()) {
+            if (structureReference != null && structureReference.isValid()) {
                 if(Harderbeds.debug) System.out.println("Bed is in village structure!");
                 return true;
             } else {
@@ -38,14 +36,14 @@ public class CheckBedLocation {
         }
     }
 
-    public static boolean isWithinVillageStructureFallback(World world, BlockPos pos) {
-        if (world == null || pos == null || world.isClient()) return false;
+    public static boolean isWithinVillageStructureFallback(Level world, BlockPos pos) {
+        if (world == null || pos == null || world.isClientSide()) return false;
 
         try {
-            ServerWorld serverWorld = (ServerWorld) world;
-            if (serverWorld.getStructureAccessor() == null) return false;
+            ServerLevel serverWorld = (ServerLevel) world;
+            if (serverWorld.structureManager() == null) return false;
 
-            var structureAccessor = serverWorld.getStructureAccessor();
+            var structureAccessor = serverWorld.structureManager();
             int radius = 1;
             var currentChunk = serverWorld.getChunk(pos);
             if (currentChunk == null) return false;
@@ -55,16 +53,19 @@ public class CheckBedLocation {
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
                     try {
-                        var checkChunkPos = new net.minecraft.util.math.ChunkPos(chunkPos.x + x, chunkPos.z + z);
+                        // FIX: Use x() and z() getters instead of .x and .z
+                        var checkChunkPos = new ChunkPos(chunkPos.x() + x, chunkPos.z() + z);
 
-                        if (!serverWorld.isChunkLoaded(checkChunkPos.x, checkChunkPos.z)) {
+                        // FIX: Use x() and z() getters
+                        if (!serverWorld.hasChunk(checkChunkPos.x(), checkChunkPos.z())) {
                             continue;
                         }
 
-                        var chunk = serverWorld.getChunk(checkChunkPos.x, checkChunkPos.z);
+                        // FIX: Use x() and z() getters
+                        var chunk = serverWorld.getChunk(checkChunkPos.x(), checkChunkPos.z());
                         if (chunk == null) continue;
 
-                        var structureReferences = structureAccessor.getStructureReferences(chunk.getPos().getStartPos());
+                        var structureReferences = structureAccessor.getAllStructuresAt(chunk.getPos().getWorldPosition());
                         if (structureReferences == null) continue;
 
                         for (var entry : structureReferences.entrySet()) {
@@ -91,17 +92,17 @@ public class CheckBedLocation {
         }
     }
 
-    public static boolean isVillageStructure(ServerWorld world, Structure structure) {
+    public static boolean isVillageStructure(ServerLevel world, Structure structure) {
         if (world == null || structure == null) return false;
 
         try {
-            var registryManager = world.getRegistryManager();
+            var registryManager = world.registryAccess();
             if (registryManager == null) return false;
 
-            var registry = registryManager.getOrThrow(RegistryKeys.STRUCTURE);
+            var registry = registryManager.lookupOrThrow(Registries.STRUCTURE);
             if (registry == null) return false;
 
-            var identifier = registry.getId(structure);
+            var identifier = registry.getKey(structure);
             if (identifier == null) return false;
 
             String path = identifier.getPath();
