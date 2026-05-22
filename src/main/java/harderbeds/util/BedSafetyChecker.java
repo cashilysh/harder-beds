@@ -191,34 +191,34 @@ public class BedSafetyChecker {
 
         dummyMob.setTarget(player);
 
-            for (int i = 0; i < 2; i++) {
-                dummyMob.tick();
-            }
+        for (int i = 0; i < 2; i++) {
+            dummyMob.tick();
+        }
 
-            Path path = dummyMob.getNavigation().createPath(player, 0);
+        Path path = dummyMob.getNavigation().createPath(player, 0);
 
-            if (path == null) {
-                if(Harderbeds.debug) System.out.println("[PathCheck] Path is null. Mob cannot reach.");
-                return false;
-            }
+        if (path == null) {
+            if(Harderbeds.debug) System.out.println("[PathCheck] Path is null. Mob cannot reach.");
+            return false;
+        }
 
-            if (path.getNodeCount() < 2) {
-                if(Harderbeds.debug) System.out.println("[PathCheck] Path is invalid. Lenght is 1");
-                return false;
-            }
+        if (path.getNodeCount() < 2) {
+            if(Harderbeds.debug) System.out.println("[PathCheck] Path is invalid. Lenght is 1");
+            return false;
+        }
 
-            if (pathContainsBlockingDoor(path, world)) {
-                if(Harderbeds.debug) System.out.println("[PathCheck] Path contains a closed door");
-                return false;
-            }
+        if (pathContainsBlockingDoor(path, world)) {
+            if(Harderbeds.debug) System.out.println("[PathCheck] Path contains a closed door");
+            return false;
+        }
 
-            if (path != null && path.canReach()) {
-                if (ModConfig.getSettings().isMobPathVisualizationEnabled()) {
-                    spawnPathParticles(path, dummyMob);
-                    if(Harderbeds.debug) System.out.println("[PathCheck] Path reaches target!");
-                    return true;
-                }
+        if (path != null && path.canReach()) {
+            if (ModConfig.getSettings().isMobPathVisualizationEnabled()) {
+                spawnPathParticles(path, dummyMob);
+                if(Harderbeds.debug) System.out.println("[PathCheck] Path reaches target!");
+                return true;
             }
+        }
 
         if (path != null) {
 
@@ -245,7 +245,7 @@ public class BedSafetyChecker {
             dummyMob = null;
         }
         if(Harderbeds.debug) System.out.println("Path reaches target: " + path.canReach());
-            return false;
+        return false;
     }
 
 

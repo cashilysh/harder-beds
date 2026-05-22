@@ -20,7 +20,7 @@ if (currentJava != requiredJava) {
 
 version = project.findProperty('modVersion') ?: '1.0.0'
 group   = project.findProperty('modGroup')   ?: project.name
-def modName       = project.findProperty('modName')           ?: project.name
+def jarName       = project.findProperty('jarName')           ?: project.name
 def targetVersion = project.hasProperty('targetVersion')
         ? project.targetVersion
         : project.findProperty('defaultTargetVersion')
@@ -234,11 +234,11 @@ gradle.buildFinished {
 
 // MC 26.x is unobfuscated — Loom does not remap, so the output task is 'jar', not 'remapJar'
 jar {
-    archiveBaseName   = modName
+    archiveBaseName   = jarName
     archiveClassifier = "mc${targetVersion}"
 
     from("LICENSE") {
-        rename { "${it}_${modName}" }
+        rename { "${it}_${jarName}" }
     }
 }
 
@@ -253,7 +253,6 @@ def updateFabricModJson(String version) {
 
     def json      = new JsonSlurper().parse(f)
     json.version  = project.version
-    json.name     = modName
     json.depends  = json.depends ?: [:]
 
     json.depends.minecraft = "~${version}"
