@@ -107,9 +107,9 @@ def resolveVersions(String gameVersion) {
         if (data && !data.isEmpty()) {
             def latest = data.find { it.version_type == "release" } ?: data[0]
             result[slug] = latest.version_number
-            println "   ✓ ${slug}: ${latest.version_number} (${latest.version_type})"
+            println "   SUCCESS: ${slug}: ${latest.version_number} (${latest.version_type})"
         } else {
-            println "   ⚠ No compatible version found for ${slug}"
+            println "   ERROR  :  No compatible version found for ${slug}"
         }
     }
 
