@@ -7,6 +7,12 @@ Optional:
 
 mOgUt4GM
 
+1.0.2
+
+- Added fast existing-mob check before expensive dummy pathfinding.
+- Fixed memory leak, XZ shuffle correlation
+- Added message when breaking villager beds
+
 1.0.1
 
 - Added toggle to disable Phantoms
