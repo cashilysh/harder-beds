@@ -1,2 +1,1 @@
-# Harder Beds
-A minecraft fabric mod
+[Harder Beds on Modrinth](https://modrinth.com/mod/harder-beds)
