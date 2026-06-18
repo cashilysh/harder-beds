@@ -182,7 +182,13 @@ public class BedSafetyChecker {
     // -------------------------------------------------------------------------
 
     private static boolean canMobReachBedViaDummy(ServerLevel world, BlockPos start, BlockPos target, Player player) {
-        Mob dummyMob = new Zombie(EntityType.ZOMBIE, world);
+
+
+        EntityType<Zombie> zombieType = (EntityType<Zombie>)
+                net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                        .getValue(net.minecraft.resources.Identifier.withDefaultNamespace("zombie"));
+        Mob dummyMob = new Zombie(zombieType, world);
+
         try {
             dummyMob.setSilent(true);
             dummyMob.setInvisible(true);
