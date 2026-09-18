@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "bed",
+  "pattern": [
+    "WWW",
+    "IEI", 
+    "PPP"
+  ],
+  "key": {
+    "W": "minecraft:magenta_wool",
+    "I": "minecraft:iron_ingot",
+    "E": "minecraft:ender_pearl",
+    "P": "#minecraft:planks"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:magenta_bed"
+  }
+}

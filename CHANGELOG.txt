@@ -1,0 +1,26 @@
+Depends:
+
+P7dR8mSH
+9s6osm5g
+
+Optional:
+
+mOgUt4GM
+
+1.0.3
+
+Implement new strawbed
+
+1.0.2
+
+- Added fast existing-mob check before expensive dummy pathfinding.
+- Fixed memory leak, XZ shuffle correlation
+- Added message when breaking villager beds
+
+1.0.1
+
+- Added toggle to disable Phantoms
+
+1.0.0
+
+- initial release
